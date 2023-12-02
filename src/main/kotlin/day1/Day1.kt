@@ -2,12 +2,10 @@ fun main(args: Array<String>) {
     val input = getResourceAsText("input.txt")
     val inputLines = input.lines()
 
-    val splits = inputLines.map { it.split("").map { it.trim() }.filter { it.isNotEmpty() } }
-
     // part 1
-    val message = splits
-        .map { it.filter { it[0].isDigit() } }
-        .map { (it[0] + it[it.size - 1]).toLong() }
+    val message = inputLines
+        .map { it.filter { it.isDigit() } }
+        .map { (it[0].toString() + it[it.length - 1]).toLong() }
         .sum()
 
     println(message)
@@ -34,7 +32,11 @@ fun main(args: Array<String>) {
                 newLine = newLine.replace(entry.key, entry.value)
             }
         }
-        var onlyDigits = newLine.filter { it.isDigit() }.split("").map { it.trim() }.filter { it.isNotEmpty() }
+        var onlyDigits = newLine
+            .filter { it.isDigit() }
+            .split("")
+            .filter { it.isNotEmpty() }
+
         sum+=(onlyDigits[0] + onlyDigits[onlyDigits.size - 1]).toLong()
     }
     println(sum)

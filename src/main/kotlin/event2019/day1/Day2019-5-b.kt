@@ -5,9 +5,7 @@ fun main(args: Array<String>) {
         .map {
             it.split("")
                .map { it.trim() }
-               .map { it.toString() }
                .filter { it.isNotEmpty() }
-
         }
 
     var sum =0
