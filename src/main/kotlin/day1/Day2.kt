@@ -6,7 +6,7 @@ fun main(args: Array<String>) {
     println(inputLines[0])
 
     //only 12 red cubes, 13 green cubes, and 14 blue cubes
-    var map: MutableMap<String, Int> = mutableMapOf(
+    val map: MutableMap<String, Int> = mutableMapOf(
         "red" to 12,
         "green" to 13,
         "blue" to 14
@@ -16,15 +16,15 @@ fun main(args: Array<String>) {
     var sum2 = 0L
     var sum1 = 0L
     for (line in inputLines) {
-        var minMap: MutableMap<String, Int> = mutableMapOf("red" to 0, "green" to 0, "blue" to 0);
+        val minMap: MutableMap<String, Int> = mutableMapOf("red" to 0, "green" to 0, "blue" to 0);
         var add = true
         for (i in 1 until line.size) {
             val split = line[i].split(" ")
-            val number = split[0]
+            val number = split[0].toInt()
             val colour = split[1]
 
-            minMap.merge(colour, number.toInt()) { x, y -> max(x, y) }
-            if (map[colour]!! < number.toLong()) add = false
+            minMap.merge(colour, number) { x, y -> max(x, y) }
+            if (map[colour]!! < number) add = false
 
             if (i == line.size - 1) {
                 if (add) sum1 += line[0].toInt()
