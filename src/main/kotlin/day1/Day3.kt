@@ -4,21 +4,21 @@ fun main(args: Array<String>) {
     val inputLines = input.lines()
 
     val map = input.lines().map { it.split(Regex("")).map { it.trim() }.filter { it.isNotEmpty() }.map { it[0] } }
-    println(map)
 
     var used: MutableSet<Pair<Int, Int>> = mutableSetOf();
     var usedInPartOne: MutableSet<Pair<Int, Int>> = mutableSetOf();
 
-    // part 1
-    println()
+
     var sum2=0L
     var sum1=0L
     for (i in 0 until map.size) {
         var j = 0
         while (j < map[0].size) {
             if (map[i][j].isDigit() && !used.contains(Pair(i,j))) {
+                // If we are at a digit, find all the other Indexes of the number
                 val indexesOfNumber = getAllIndexesOfNumber(map, Pair(i, j))
 
+                // See if any part of the number is adjacent to a special character.
                 for (index in indexesOfNumber) {
                     val location = findAdjacentToSpecialCharacter(map, index)
                     if (location != null) {
@@ -29,14 +29,16 @@ fun main(args: Array<String>) {
                             usedInPartOne.addAll(indexesOfNumber)
                         }
 
+                        // See if that special character is adjacent to another number.
                         val otherNumberIndex = findAdjacentToNumber(map, location, indexesOfNumber)
                         if(otherNumberIndex != null) {
                             val otherNumber = getAllIndexesOfNumber(map, otherNumberIndex)
 
-                            //Add so we don't count double numbers
+                            //Add so we don't count numbers twice
                             used.addAll(indexesOfNumber)
                             used.addAll(otherNumber)
 
+                            // parse result to an actual number.
                             val valueOne = reduceToNumber(indexesOfNumber, map)
                             val valueTwo = reduceToNumber (otherNumber, map)
 
@@ -44,7 +46,6 @@ fun main(args: Array<String>) {
                             sum2 += valueOne*valueTwo
                             break
                         }
-
                     }
                 }
             }
@@ -56,17 +57,17 @@ fun main(args: Array<String>) {
 
 }
 
-private fun reduceToNumber(list: List<Pair<Int, Int>>, map: List<List<Char>>) = list.map { map[it.first][it.second] }
-    .map { it.toString() }
-    .reduce { x, y -> x + y }
-    .toLong()
+private fun reduceToNumber(list: List<Pair<Int, Int>>, map: List<List<Char>>) =
+    list.map { map[it.first][it.second] }
+        .map { it.toString() }
+        .reduce { x, y -> x + y }
+        .toLong()
 
-
-private fun getStartNumber(map: List<List<Char>>, index: Pair<Int, Int>): Int {
+private fun getStartIndex(map: List<List<Char>>, index: Pair<Int, Int>): Int {
     var jj = index.second
     val ii = index.first
     while (true) {
-        if (!isValidIndex(ii, jj - 1, map.size, map[0].size) || !map[ii][jj - 1].isDigit()) break
+        if (jj - 1 < 0 || !map[ii][jj - 1].isDigit()) break
         jj--
     }
     return jj
@@ -74,7 +75,7 @@ private fun getStartNumber(map: List<List<Char>>, index: Pair<Int, Int>): Int {
 
 private fun getAllIndexesOfNumber(map: List<List<Char>>, index: Pair<Int, Int>): List<Pair<Int, Int>> {
     var list: MutableList<Pair<Int, Int>> = mutableListOf()
-    var jj = getStartNumber(map, index)
+    var jj = getStartIndex(map, index) // As we get a random index inside the number, move to start index of the number.
     while (true) {
         if (!isValidIndex(index.first, jj, map.size, map[0].size) || !map[index.first][jj].isDigit()) break
         list.add(Pair(index.first, jj))
@@ -104,11 +105,8 @@ private fun findAdjacentToSpecialCharacter(map: List<List<Char>>, elf: Pair<Int,
     for (k in ith.indices) {
         val index_I = elf.first + ith[k]
         val index_J = elf.second + jth[k]
-        if (isValidIndex(index_I, index_J, map.size, map[0].size) &&
-            !map[index_I][index_J].isDigit() &&
-            map[index_I][index_J] != '.')
+        if (isValidIndex(index_I, index_J, map.size, map[0].size) && !map[index_I][index_J].isDigit() && map[index_I][index_J] != '.')
         {
-
             return Pair(index_I, index_J)
         }
     }
