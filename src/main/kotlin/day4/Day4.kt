@@ -6,27 +6,24 @@ fun main(args: Array<String>) {
     // Parsing was fun again
     val lines = input.lines()
         .map { it.split(":") }
-        .map { it.drop(1) } // drop Game
+        .map { it.drop(1) } // drop Game %d
+        .flatten()
         .map {
-            it.map {
                 it.split("|")// split into 2 parts
                     .map {
                         it.split(" ") // split into numbers
                             .filter { it.isNotEmpty() }
                             .map { it.toInt() }
                     }
-            }
         }
-
 
     val cards = IntArray(lines.size) { 1 }
     var sum = 0
     for ((i, line) in lines.withIndex()) {
-        // I ended up with double nested list's, so a flatmap here.
-        val setOne = line.flatten()[0].toSet()
-        val setTwo = line.flatten()[1].toSet()
+        val setOne = line[0].toSet()
+        val setTwo = line[1].toSet()
 
-        // intersects find all which are both in setOne and setTwo.
+        // intersects; find all which are both present in setOne and setTwo.
         val intersect = setOne.intersect(setTwo)
 
         //Part 1
