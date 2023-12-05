@@ -23,7 +23,7 @@ fun main(args: Array<String>) {
         val setOne = line[0].toSet()
         val setTwo = line[1].toSet()
 
-        // intersects; find all which are both present in setOne and setTwo.
+        // intersects; find all which number are present in setOne and setTwo.
         val intersect = setOne.intersect(setTwo)
 
         //Part 1
