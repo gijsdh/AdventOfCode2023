@@ -1,44 +1,45 @@
 fun main(args: Array<String>) {
     val input = getResourceAsText("input.txt")
-    val inputTest = getResourceAsText("testInput.txt")
-    val inputLines = input.lines()
 
-    val seeds = input.lines()[0].split(" ").drop(1).map { it.toLong() }.toMutableList()
+    val seeds = input.lines()[0]
+        .split(" ")
+        .drop(1)
+        .map { it.toLong() }
+        .toMutableList()
 
     println(seeds)
-    val map = input
-        .split("\n\r")
-        .map { it.split("\r")}
+    val mappings = input
+        .split("\n\r")            // Split on empty line
+        .map { it.split("\r") }   // split on end of line
         .drop(1)
-        .map { it.filter { it.isNotEmpty() }.drop(1) }
-
-//    println(map)
+        .map { it.filter { it.isNotEmpty() }.drop(1) } // drop empty and line with text
+        .map {
+            it.map {
+                it.split(" ")     // split 3 numbers and parse to long.
+                    .take(3)
+                    .map { it.trim().toLong() }
+            }
+        }
 
     var locations = mutableListOf<Long>()
-
     for (seed in seeds) {
         var location = seed
-        for (i in 0 until map.size) {
-            for (j in 0 until map[i].size) {
-                var values = map[i][j].split(" ")
-                val destination = values[0].trim().toLong()
-                val source = values[1].trim().toLong()
-                val range = values[2].trim().toLong()
-
-                println("$seed $source $location")
-                if(source <= location && source + range > location) {
+        for (i in 0 until mappings.size) {
+            for (j in 0 until mappings[i].size) {
+                var values = mappings[i][j]
+                val destination = values[0]
+                val source = values[1]
+                val range = values[2]
+                if (source <= location && source + range > location) { // start is inclusive end not %$^$%$&^..
                     location += (destination - source)
-                    break;
-                    println("$seed $location $destination $source $range")
+                    break
                 }
             }
         }
         locations.add(location)
     }
 
-    println(locations)
     println(locations.min())
-
 
 }
 
