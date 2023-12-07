@@ -6,7 +6,6 @@ fun main(args: Array<String>) {
             it.split(Regex("Distance: |Time: |  "))
                 .map { it.trim() }
                 .filter { it.isNotEmpty() }
-
         }
 
     println(parsed)
