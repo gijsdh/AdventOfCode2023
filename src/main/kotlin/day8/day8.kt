@@ -5,23 +5,29 @@ fun main(args: Array<String>) {
     val parsed = input.lines()
     val commands = parsed[0]
 
-    val mapping = parsed.drop(2).map { it.split(Regex(" = \\(|, |\\)")).filter { it.isNotEmpty() } }
+    val mapping = parsed.drop(2)
+        .map { it.split(Regex(" = \\(|, |\\)"))
+            .filter { it.isNotEmpty() } }
     val map: MutableMap<String, Pair<String, String>> = mutableMapOf();
     for (line in mapping) {
         map[line[0]] = Pair(line[1], line[2])
     }
 
     // Part one
-    println(findSumPath(commands, map,  Pair("AAA", 0)).second)
+    println(findSumPath(commands, map, Pair("AAA", 0)).second)
 
     val starts = map.keys.filter { it.last() == 'A' }
+    println(starts)
     val list = mutableListOf<Pair<String, Int>>()
     starts.forEach { list.add(Pair(it, 0)) }
     var index = 0
-    while (index < 1) {
-        for ((i, start) in starts.withIndex()) {
+
+    // This all works as Length(XXA -> XXZ) == Length(XXZ-> XXZ). Which is odd, but apparently a property of the input.
+    while (index < 4) {
+        for (i in starts.indices) {
             list[i] = findSumPath(commands, map, list[i])
         }
+        println(list)
         index++
     }
 
@@ -34,7 +40,9 @@ fun main(args: Array<String>) {
     for (line in list) {
         sum2 = (line.second * sum2) / gcd(sum2, line.second.toLong())
     }
-    println(sum2)
+
+    println(sum2 / index)
+    println(lcm(list.map { it.second.toLong() }) / index)
 }
 
 private fun findSumPath(
@@ -52,13 +60,15 @@ private fun findSumPath(
             else -> throw Exception("shit")
         }
         index++
-        if (pos.last() == 'Z') break
+        if (pos.last() == 'Z' || pos == "ZZZ") break
     }
     return Pair(pos, index)
 }
 
 // https://rosettacode.org/wiki/Greatest_common_divisor#Kotlin
+// The greatest common divisor or greatest common factor (gcf)
 tailrec fun gcd(a: Long, b: Long): Long = if (b == 0L) kotlin.math.abs(a) else gcd(b, a % b)
+tailrec fun lcm(a: List<Long>): Long = a.reduce { first, second -> first * second / gcd(first, second) }
 
 
 
