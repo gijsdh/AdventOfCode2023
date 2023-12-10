@@ -17,16 +17,17 @@ private fun getSolution(parsed: List<List<Long>>, partOne: Boolean): Long {
             list.add(list
                 .last()
                 .windowed(2)
-                .map { if (partOne) it[1] - it[0] else it[0] - it[1] }
+                .map { dif(partOne, it)}
             )
             if (list.last().all { it == 0L }) break
         }
         sum += list
             .map { if (partOne) it.last() else it.first() }
-            .reduce { i, j -> i + j }
+            .sum()
     }
     return sum
 }
+private fun dif(partOne: Boolean, it: List<Long>) = if (partOne) it[1] - it[0] else it[0] - it[1]
 
 
 
