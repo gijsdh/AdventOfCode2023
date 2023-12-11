@@ -1,4 +1,6 @@
-import java.lang.Math.abs
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.abs
 
 fun main(args: Array<String>) {
     val input = getResourceAsText("input.txt")
@@ -15,32 +17,32 @@ fun main(args: Array<String>) {
 
     // find rows and columns with that need to be expanded
     var rows = parsed.indices.toMutableSet()
-    var collums = parsed[0].indices.toMutableSet()
+    var colums = parsed[0].indices.toMutableSet()
     for (value in list) {
         rows.remove(value.first)
-        collums.remove(value.second)
+        colums.remove(value.second)
     }
 
-    println(calculateDistances(list, rows, collums, 2))
-    println(calculateDistances(list, rows, collums, 1000000))
-
-
+    println(calculateDistances(list, rows, colums, 2))
+    println(calculateDistances(list, rows, colums, 1000000))
 }
 
 private fun calculateDistances(list: MutableList<Pair<Int, Int>>, rows: MutableSet<Int>, colums: MutableSet<Int>, expansion: Long): Long {
     var sum = 0L
     for ((i, galaxy) in list.withIndex()) {
         for (j in i + 1 until list.size) {
-            val twoX = list[j].first
-            val twoY = list[j].second
+            val compareX = list[j].first
+            val compareY = list[j].second
 
-            var rangeRows = (if (twoX > galaxy.first) galaxy.first until twoX else twoX until galaxy.first).toMutableSet()
-            var rangeCollums = (if (twoY > galaxy.second) galaxy.second until twoY else twoY until galaxy.second).toMutableSet()
+            val galaxyX = galaxy.first
+            val galaxyY = galaxy.second
+
+            val rangeRows = (min(compareX, galaxyX) until max(compareX, galaxyX)).toMutableSet()
+            val rangeColumns = (min(compareY, galaxyY) until max(compareY, galaxyY)).toMutableSet()
+
             sum += (expansion - 1) * rows.intersect(rangeRows).size
-            sum += (expansion - 1) * colums.intersect(rangeCollums).size
-
-            var manhattan = abs(galaxy.first - twoX) + abs(galaxy.second - twoY)
-            sum += manhattan
+            sum += (expansion - 1) * colums.intersect(rangeColumns).size
+            sum += abs(galaxyX - compareX) + abs(galaxyY - compareY)
         }
     }
     return sum
