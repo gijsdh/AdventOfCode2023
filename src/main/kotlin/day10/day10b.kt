@@ -5,7 +5,7 @@ fun main(args: Array<String>) {
     val input = getResourceAsText("input.txt")
     val inputTest = getResourceAsText("testInput.txt")
 
-    val maze = inputTest.lines().map { it.split("").filter { it.isNotEmpty() }.map { it.trim() } }
+    val maze = input.lines().map { it.split("").filter { it.isNotEmpty() }.map { it.trim() } }
     var start = Pair(0, 0)
 
     for (i in 0 until maze.size) {
@@ -78,8 +78,8 @@ fun main(args: Array<String>) {
     println("Creating a big Maze")
     // we do replacements here to be able to use the flood fill algorithm, I have no idea how to do it otherwise.
     //
-    //   . ->   .  .    L    -> L  -   7   ->   7  .   J ->   J  .  ect
-    //          .  .            .  .            |  .          .  .
+    //   [.] ->   .  .    [L]    -> L  -   [7]   ->   7  .   [J] ->   J  .  [|] -> |  .   [F]  -> F  -    [-]  -> -  -
+    //            .  .              .  .              |  .            .  .         |  .           |  .            .  .
     var bigMaze: Array<Array<String>> = Array(maze.size * 2) { Array(maze[0].size * 2) { "." } }
     var replaceMents = mapOf(
         "|" to listOf("|", ".", "|", "."),
