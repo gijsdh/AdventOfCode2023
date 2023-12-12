@@ -37,15 +37,14 @@ fun calculate(value: List<String>, chunks: List<Int>, index: Int, indexChunks: I
     }
 
     var sum = 0L
-    for (char in listOf(".", "#")) {
-        if(value[index] == char || value[index] == "?") {
-            if (char == ".") {
-                if (indexChunks < chunks.size && chunks[indexChunks] == count) sum += calculate(value, chunks, index + 1, indexChunks + 1, 0)
-                if(count == 0) sum += calculate(value, chunks, index + 1, indexChunks, 0);
-            }
-            if (char == "#") sum += calculate(value, chunks, index + 1 , indexChunks, count + 1)
-        }
+    if(value[index] in listOf(".", "?")) {
+        if (indexChunks < chunks.size && chunks[indexChunks] == count) sum += calculate(value, chunks, index + 1, indexChunks + 1, 0)
+        if(count == 0) sum += calculate(value, chunks, index + 1, indexChunks, 0);
     }
+    if(value[index] in listOf("#", "?")) {
+       sum += calculate(value, chunks, index + 1 , indexChunks, count + 1)
+    }
+
     memoization[Triple(index, indexChunks, count)] = sum
     return sum
 }
