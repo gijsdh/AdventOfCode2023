@@ -8,7 +8,6 @@ fun main(args: Array<String>) {
             .filter { it.isNotEmpty() } }
         }
 
-    println(parsed)
     var sum = 0L
     for (line in parsed) {
         val value = List(5) { line[0][0] }.joinToString("?").split("").filter { it.isNotEmpty() }
@@ -27,12 +26,8 @@ private val memoization = mutableMapOf<Triple<Int, Int, Int>, Long>()
 fun calculate(value: List<String>, chunks: List<Int>, index: Int, indexChunks: Int, count: Int): Long {
     if(memoization.contains(Triple(index, indexChunks, count))) return memoization[Triple(index, indexChunks, count)]!!
     if (index == value.size) {
-        if (chunks.size - 1 == indexChunks && chunks[indexChunks] == count) {
-            return 1
-        }
-        if (chunks.size == indexChunks && count == 0) {
-            return 1
-        }
+        if (chunks.size - 1 == indexChunks && chunks[indexChunks] == count) return 1
+        if (chunks.size == indexChunks && count == 0) return 1
         return 0
     }
 
@@ -41,9 +36,7 @@ fun calculate(value: List<String>, chunks: List<Int>, index: Int, indexChunks: I
         if (indexChunks < chunks.size && chunks[indexChunks] == count) sum += calculate(value, chunks, index + 1, indexChunks + 1, 0)
         if(count == 0) sum += calculate(value, chunks, index + 1, indexChunks, 0);
     }
-    if(value[index] in listOf("#", "?")) {
-       sum += calculate(value, chunks, index + 1 , indexChunks, count + 1)
-    }
+    if(value[index] in listOf("#", "?")) sum += calculate(value, chunks, index + 1 , indexChunks, count + 1)
 
     memoization[Triple(index, indexChunks, count)] = sum
     return sum
