@@ -11,6 +11,7 @@ fun main(args: Array<String>) {
 
     var index = 0L;
 
+    // We are storing the whole map as a key, quit a lot of data
     var map: MutableMap<List<List<String>>, Long> = mutableMapOf()
     var matched = false
     while (index < 1000000000) {
@@ -32,6 +33,7 @@ fun main(args: Array<String>) {
             }
         }
 
+        // Probably better to rotate, this was a bit mistake intensive
         for ((i, row) in parsed.withIndex()) {
             for ((j, char) in row.withIndex()) {
                 if (char == "O") {
@@ -52,11 +54,9 @@ fun main(args: Array<String>) {
 
         for (i in parsed.size - 1 downTo 0) {
             for (j in 0 until parsed[0].size) {
-//            println("$i $j")
                 if (parsed[i][j] == "O") {
                     for (k in i + 1 until parsed.size) {
                         if (parsed[k][j] == "O" || parsed[k][j] == "#") {
-//                        println("$k $i $j ${parsed[i][j]}")
                             parsed[k - 1][j] = "O"
                             if (k - 1 != i) parsed[i][j] = "."
                             break
@@ -93,14 +93,16 @@ fun main(args: Array<String>) {
         println(parsed.flatten().count { it == "O" })
         printMap(parsed)
 
-        if (!matched && map.contains(parsed)){
-            val i = map[parsed]!!
-            var deltaOne = index - i
-            var amt = (1000000000L - index)  / deltaOne
+        // The pattern will repeat it self after x cycles.
+        // We use this to extrapolate the result to results. So we don't have to go through 10^9 cycles.
+        if (!matched && map.contains(parsed)) {
+            val newIndex = map[parsed]!!
+            val delta = index - newIndex
+            val amt = (1000000000L - index) / delta
 
-            index += amt * deltaOne
+            index += amt * delta
             println(index)
-            matched=true
+            matched = true
         }
 
         map.put(parsed, index)
