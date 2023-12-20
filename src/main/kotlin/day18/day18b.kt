@@ -18,8 +18,8 @@ fun main(args: Array<String>) {
     var loc = Pair(0L, 0L)
     var sumLengths = 0L
     for (line in parsed) {
-        var direction = line[2][7].toString()
-        var length = line[2].subSequence(2, 7).toString().toLong(16)
+        val direction = line[2][7].toString()
+        val length = line[2].subSequence(2, 7).toString().toLong(16)
 
         sumLengths += length
 
@@ -39,16 +39,12 @@ fun main(args: Array<String>) {
     // Used Shoelace  https://en.wikipedia.org/wiki/Shoelace_formula to calculate area
     // And we can use Pick's theorem (https://en.wikipedia.org/wiki/Pick%27s_theorem) to calculate the interior points (area).
     // A = I + b / 2 -1  -> I = - b /2 + A + 1
-    // This is needed as our line enclosing the area also hase width.
+    // Underneath is needed as our line enclosing the area also hase a width.
     // Interior + Exterior =  answers
     val interiorSum = shoelaceArea(partTwo) - sumLengths / 2 + 1
 
     println(interiorSum + sumLengths)
 
-}
-
-class Point(val x: Long, val y: Long) {
-    override fun toString() = "($x, $y)"
 }
 
 // https://rosettacode.org/wiki/Shoelace_formula_for_polygonal_area
@@ -59,4 +55,7 @@ fun shoelaceArea(v: List<Point>): Long {
         a += v[i].x * v[i + 1].y - v[i + 1].x * v[i].y
     }
     return Math.abs(a + v[n - 1].x * v[0].y - v[0].x * v[n - 1].y) / 2
+}
+class Point(val x: Long, val y: Long) {
+    override fun toString() = "($x, $y)"
 }
