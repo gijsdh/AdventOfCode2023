@@ -98,31 +98,4 @@ fun countRanges(
     return sum
 }
 
-fun addPartOne(parts: Map<String, Int>, map: MutableMap<String, List<WorkFlow>>): Boolean {
-    var state = "in"
-    while (true) {
-//        println(state)
-        var eval = map[state]!!
-        for (work in eval) {
-            var applies = true
-            if (work.isOperation) {
-                if (work.operation == ">") {
-                    applies = parts[work.type]!! > work.value
-                } else if (work.operation == "<") {
-                    applies = parts[work.type]!! < work.value
-                }
-            }
-
-            if (applies) {
-                if (work.result == "R") return false
-                if (work.result == "A") return true
-                state = work.result
-                break
-            }
-        }
-    }
-
-    throw Exception("shit")
-}
-
 

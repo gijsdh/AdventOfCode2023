@@ -16,8 +16,8 @@ fun main(args: Array<String>) {
         var emptyMap = mutableMapOf<String, String>()
         val childs = line[1].split(",").map { it.trim() }
         if (line[0].startsWith("%")) {
-            map.put(name, Module(name, type, childs, "off",emptyMap))
-        } else if(line[0].startsWith("&")) {
+            map.put(name, Module(name, type, childs, "off", emptyMap))
+        } else if (line[0].startsWith("&")) {
             map.put(name, Module(name, type, childs, "low", emptyMap))
         } else {
             map.put(name, Module(name, type, childs, "", emptyMap))
@@ -40,7 +40,7 @@ fun main(args: Array<String>) {
     var sumHigh = 0
     var index = 0L;
 
-
+    // From input: All points below point towards cl is Conjunction point towards rx. So it needs 4 High pulses to send low pulse.
     var cycleMape = mutableMapOf("js" to 0L, "qs" to 0L, "dt" to 0L, "ts" to 0L)
 
     while (true) {
@@ -52,13 +52,13 @@ fun main(args: Array<String>) {
         sumLow++
 
         while (dequeue.isNotEmpty()) {
-            var work: LinkedList<Pair<Module, Pair<String, String>>> = LinkedList();
+            val work: LinkedList<Pair<Module, Pair<String, String>>> = LinkedList();
             while (dequeue.isNotEmpty()) {
 
-                var current = dequeue.pop()
-                var module = current.first
+                val current = dequeue.pop()
+                val module = current.first
                 var pulse = current.second.first
-                var old = current.second.second
+                val old = current.second.second
 
                 if(pulse == "low" && module.name == "rx") throw Exception("$index")
 
@@ -68,13 +68,12 @@ fun main(args: Array<String>) {
                 }
 
 
-                if (pulse=="high" && module.name in cycleMape.keys) {
+                if (pulse == "high" && module.name in cycleMape.keys) {
                     if (cycleMape[module.name] == 0L) {
                         cycleMape[module.name] = index
                     }
-                    if (cycleMape.values.all { it > 0 }) println(lcm(cycleMape.values.toList()))
+                    if (cycleMape.values.all { it > 0 }) throw java.lang.Exception("${lcm(cycleMape.values.toList())}")
                 }
-
 
                 if (pulse == "high" && module.state in listOf("on", "off")) continue
 
@@ -102,12 +101,6 @@ fun main(args: Array<String>) {
         if(index == 1000L) println("${sumLow*sumHigh}")
 
     }
-    println(map)
-
-    println("$sumLow $sumHigh")
-
-
-
 }
 
 class Module(val name:String, val type: String, val childs: List<String>, var state: String, val mem: MutableMap<String,String>) {
