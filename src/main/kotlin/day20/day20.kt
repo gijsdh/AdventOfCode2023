@@ -1,5 +1,4 @@
 import java.util.*
-import kotlin.Comparator
 
 fun main(args: Array<String>) {
     val input = getResourceAsText("input.txt")
@@ -40,8 +39,8 @@ fun main(args: Array<String>) {
     var sumHigh = 0
     var index = 0L;
 
-    // From input: All points below point towards cl is Conjunction point towards rx. So it needs 4 High pulses to send low pulse.
-    var cycleMape = mutableMapOf("js" to 0L, "qs" to 0L, "dt" to 0L, "ts" to 0L)
+    // From input: All points below point towards and cl is Conjunction point that points towards rx. So it needs 4 High pulses to send low pulse.
+    var cycleMap = mutableMapOf("js" to 0L, "qs" to 0L, "dt" to 0L, "ts" to 0L)
 
     while (true) {
         index++
@@ -68,11 +67,11 @@ fun main(args: Array<String>) {
                 }
 
 
-                if (pulse == "high" && module.name in cycleMape.keys) {
-                    if (cycleMape[module.name] == 0L) {
-                        cycleMape[module.name] = index
+                if (pulse == "high" && module.name in cycleMap.keys) {
+                    if (cycleMap[module.name] == 0L) {
+                        cycleMap[module.name] = index
                     }
-                    if (cycleMape.values.all { it > 0 }) throw java.lang.Exception("${lcm(cycleMape.values.toList())}")
+                    if (cycleMap.values.all { it > 0 }) throw java.lang.Exception("${lcm(cycleMap.values.toList())}")
                 }
 
                 if (pulse == "high" && module.state in listOf("on", "off")) continue

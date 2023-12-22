@@ -1,6 +1,3 @@
-import java.util.*
-import kotlin.Comparator
-
 fun main(args: Array<String>) {
     val input = getResourceAsText("input.txt")
     val inputTest = getResourceAsText("testInput.txt")
