@@ -39,10 +39,8 @@ fun main(args: Array<String>) {
     }
 
 
-
     var stable = mutableSetOf<Triple<Int, Int, Int>>()
     stable.addAll(objects.flatten())
-//    println(objects)
 
 
     while (true) {
@@ -59,7 +57,6 @@ fun main(args: Array<String>) {
                 stop = false
                 var temp = mutableSetOf<Triple<Int, Int, Int>>()
                 for (cube in obj) {
-
                     stable.remove(Triple(cube.first, cube.second, cube.third))
                     val element = Triple(cube.first, cube.second, cube.third - 1)
 
@@ -85,7 +82,6 @@ fun main(args: Array<String>) {
 
         val falling = mutableSetOf<Int>()
         while (true) {
-//            var workSet = mutableSetOf<MutableSet<Triple<Int, Int, Int>>>()
             var stop = true
             for ((i, obj) in copyObject.withIndex()) {
                 if (obj == objOne) continue
@@ -96,7 +92,6 @@ fun main(args: Array<String>) {
                     if (work.contains(shiftDown) && !obj.contains(shiftDown)) moveDown = false
                 }
                 if (moveDown) {
-                    println("$objOne $obj")
                     falling.add(i)
                     stop = false
                     var temp = mutableSetOf<Triple<Int, Int, Int>>()
@@ -115,11 +110,5 @@ fun main(args: Array<String>) {
         }
         sum += falling.size
     }
-
     println(sum)
-
 }
-
-//88604
-//88164
-//56325
