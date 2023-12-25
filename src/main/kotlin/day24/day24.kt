@@ -95,7 +95,7 @@ fun main(args: Array<String>) {
     //{{X->4.72612107765508000000000000000*^14,Y->2.70148844447628000000000000000*^14,Z->2.73604689965980000000000000000*^14
     // Anser = 1016365642179116
     // Solved in Wolfram cloud, there you can solve any number of equation.
-    // Learned a lot again, had to revisited high school math / physics.
+    // Learned a lot again, had to revisited math / physics.
 
 }
 
