@@ -1,9 +1,7 @@
 package day25
 
 import getResourceAsText
-import java.math.BigDecimal
 import java.util.*
-import kotlin.math.min
 import kotlin.math.min
 
 fun main(args: Array<String>) {
@@ -11,7 +9,7 @@ fun main(args: Array<String>) {
     val inputTest = getResourceAsText("testInput.txt")
 
     val parsed =
-        input.lines().map { it.split(Regex(": | ")) }
+        inputTest.lines().map { it.split(Regex(": | ")) }
 
     println(parsed)
     var graph: MutableMap<String, MutableMap<String, Int>> = mutableMapOf()
@@ -30,15 +28,21 @@ fun main(args: Array<String>) {
 
    var graphToSearch =  Graph(graph, graph.keys.map { it to null }.toMap().toMutableMap())
 
+
+    // We use here the fact that in a maximum flow problem, if there are only 3 edge connecting two larger groups.
+    // The maximum flow will be 3 if source is in one group and sink is in the other. As all nodes have a weight / capacity of 3.
+    //
+
     val s = graph.keys.first()
     for (t in graph.keys.drop(1)) {
-//        println("$s $t")
-//        println(graphToSearch.minCut(s, t))
-       if( graphToSearch.minCut(s, t) == 3) {
-           println("$s $t")
-           break
-       }
+        if (graphToSearch.minCut(s, t) == 3) {
+            println("$s $t")
+            break
+        }
     }
+    // When we stop teh calculation at the first ocurrence of mincut, we get back a parent of the last BFS.
+    // In this BFS we found that we could not move to the other group anymore.
+    // As all three vertices were used in previous searches. So parent will only contain all nodes in One group, the other nodes will be undefined.
     val groupOne = graphToSearch.parent.filter { it.value != null }
     val groupTwo = graphToSearch.parent.filter { it.value == null }
 
@@ -60,6 +64,9 @@ class Graph(val graph: MutableMap<String, MutableMap<String, Int>>, var parent: 
         val dequeue: LinkedList<String> = LinkedList<String>();
         dequeue.add(s)
 
+        // Just walks through the grid. And we keep track of Parent (Just a relation between nodes) map to keep track of visited nodes.
+        // In the graph we keep track of if we used and edge already, then the capacity would 0 for example.
+        // At the end we check if we found the sink as a parent somewhere.
         while (dequeue.isNotEmpty()) {
             var value = dequeue.pollFirst()
 
@@ -88,13 +95,16 @@ class Graph(val graph: MutableMap<String, MutableMap<String, Int>>, var parent: 
             var flow = Int.MAX_VALUE
             var n = t
 
+            // This always returns one. But in weighted flow would return, the minimum in the path taken, as that constricts the flow for the whole path.
             while (n != s) {
                 flow = min(flow, graph[parent[n]]!![n]!!)
                 n = parent[n]!!
             }
-            maxflow +=flow
+            maxflow += flow
 
             var v = t
+            //  Here we update the graph for the path taken, so we would move all the path taken to zero.
+            //  As we have bidirectional, we could use a path from both side. In that case we would reverse the flow (+ 1 in this case).
             while (v != s) {
                 var u = parent[v]!!
                 graph[u]!![v] = graph[u]!![v]!! - flow
